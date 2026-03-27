@@ -7,6 +7,7 @@
 </head>
 <body>
     <form th:action="@{/chores/save}" th:object="${chore}" method="post">
+        <input type="hidden" th:field="*{id}">
         <div>
             <label for="choreName">Huishoud Taak</label>
             <input type="text" id="choreName" th:field="*{choreName}">
@@ -24,10 +25,14 @@
         </div>
         <div>
             <label for="responsibility">Verantwoordelijke</label>
-            <input type="text" id="responsibility" th:field="*{responsibility}"/>
-            <span th:if="${#fields.hasErrors('responsibility')}" th:errors="*{responsibility}" class="error"></span>
+            <select id="responsibility" th:field="*{responsibility}" multiple>
+                <option th:each="familymember : ${allFamilyMembers}"
+                        th:value="${familymember.fullName}"
+                        th:text="${familymember.fullName}">
+                </option>
+            </select>
         </div>
-        <button type="submit">Toevoegen</button>
+        <button type="submit">Opslaan</button>
     </form>
     <p><a th:href="@{/chores}">Terug naar het overzicht</a></p>
 </body>

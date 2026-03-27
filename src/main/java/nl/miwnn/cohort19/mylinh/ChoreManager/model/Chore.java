@@ -34,6 +34,14 @@ public class Chore {
     @OneToMany(mappedBy = "chore", cascade = CascadeType.ALL)
     private List<SubTask> subtasks = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "chore_familymember",
+            joinColumns = @JoinColumn(name = "chore_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_id")
+    )
+    private List<FamilyMember> familymembers = new ArrayList<>();
+
     public Chore(String choreName, int choreFrequency, String location, String responsibility) {
         this.choreName = choreName;
         this.choreFrequency = choreFrequency;
@@ -49,6 +57,10 @@ public class Chore {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<SubTask> getSubtasks() {
+        return subtasks;
     }
 
     public Integer getChoreFrequency() {
@@ -81,5 +93,13 @@ public class Chore {
 
     public void setResponsibility(String responsibility) {
         this.responsibility = responsibility;
+    }
+
+    public List<FamilyMember> getFamilymembers() {
+        return familymembers;
+    }
+
+    public void setFamilymembers(List<FamilyMember> familymembers) {
+        this.familymembers = familymembers;
     }
 }

@@ -1,6 +1,8 @@
 package nl.miwnn.cohort19.mylinh.ChoreManager.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.awt.print.Book;
 
@@ -13,7 +15,11 @@ public class SubTask {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long subtaskId;
+
+    @NotBlank(message = "Naam voor subtaak mag niet leeg zijn.")
+    @Size(max = 200, message = "Naam voor subtaak mag maximaal 100 tekens bevatten")
+    private String subtaskName;
 
     @ManyToOne
     @JoinColumn(name = "chore_id")
@@ -21,19 +27,28 @@ public class SubTask {
 
     private boolean finished;
 
-    public SubTask(Chore chore, boolean finished) {
+    public SubTask(Chore chore, String subtaskName) {
         this.chore = chore;
-        this.finished = finished;
+        this.subtaskName = subtaskName;
+        this.finished = true;
     }
 
     public SubTask() {}
 
-    public Long getId() {
-        return id;
+    public Long getSubtaskId() {
+        return subtaskId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getSubtaskName() {
+        return subtaskName;
+    }
+
+    public void setSubtaskName(String subtaskName) {
+        this.subtaskName = subtaskName;
+    }
+
+    public void setId(Long subtaskId) {
+        this.subtaskId = subtaskId;
     }
 
     public Chore getChore() {
@@ -44,7 +59,7 @@ public class SubTask {
         this.chore = chore;
     }
 
-    public boolean isFinished() {
+    public boolean getFinished() {
         return finished;
     }
 

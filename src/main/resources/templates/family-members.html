@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${paginaTitel}">Familie Leden Overzicht</title>
+</head>
+<body>
+<h1>Familie Leden</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Voornaam</th>
+        <th>Achternaam</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="familymember : ${allFamilyMembers}">
+        <td th:text="${familymember.firstName}">Voornaam</td>
+        <td th:text="${familymember.lastName}">Achternaam</td>
+    </tr>
+    </tbody>
+</table>
+<h2>Familie Lid Toevoegen</h2>
+<form th:action="@{/familymembers/save}" th:object="${newFamilyMember}" method="post">
+    <input type="hidden" th:field="*{memberId}">
+    <div>
+        <label for="firstName">Voornaam</label>
+        <input type="text" id="firstName" th:field="*{firstName}">
+        <span th:if="${#fields.hasErrors('firstName')}"
+              th:errors="*{firstName}">Fout</span>
+    </div>
+    <div>
+        <label for="lastName">Achternaam</label>
+        <input type="text" id="lastName" th:field="*{lastName}">
+        <span th:if="${#fields.hasErrors('lastName')}"
+              th:errors="*{lastName}">Fout</span>
+    </div>
+    <button type="submit">Toevoegen</button>
+</form>
+<p><a th:href="@{/chores}">Terug naar het overzicht</a></p>
+</body>
+</html>

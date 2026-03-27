@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="/style.css">
+  <title th:text="${paginaTitel}">Huishoud Taak Detail Pagina</title>
+</head>
+<body>
+<h1 th:text="|Details van ${chore.choreName}|"></h1>
+
+  <ul>
+    <li>
+      <a th:href="@{/chore/edit/{choreName}(choreName=${chore.choreName})}">Bewerk deze taak</a>
+    </li>
+    <li>
+      <a th:href="@{/chore/delete/{choreName}(choreName=${chore.choreName})}">Verwijder deze taak</a>
+    </li>
+    <li>Voeg taak toe</li>
+  </ul>
+
+<h2>Subtaken</h2>
+<table>
+  <thead>
+  <tr>
+    <th>Subtaak</th>
+    <th>Status</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="subtask : ${chore.subtasks}">
+    <td th:text="${subtask.subtaskName}"></td>
+    <td th:text="${subtask.finished} ? 'Openstaand' : 'Uitgevoerd'">
+      Status
+    </td>
+    <td>
+      <form th:if="${subtask.finished}"
+            th:action="@{/subtasks/check/{id}(id=${subtask.subtaskId})}"
+            method="post">
+        <button type="submit">Uitgevoerd</button>
+      </form>
+      <form th:unless="${subtask.finished}"
+            th:action="@{/subtasks/uncheck/{id}(id=${subtask.subtaskId})}"
+            method="post">
+        <button type="submit">Open zetten</button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<p><a th:href="@{/chores}">Terug naar het overzicht</a></p>
+</body>
+</html>
