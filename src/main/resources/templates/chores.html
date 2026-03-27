@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${paginaTitel}">Huishoudtaken Overzicht</title>
+</head>
+<body>
+  <h1 th:text="${paginaTitel}"></h1>
+  <form method="get" action="/chores">
+    <input type="text" name="query"
+           th:value="${query}"
+           placeholder="Zoek op taaknaam..."/>
+    <button type="submit">Zoeken</button>
+  </form>
+  <div th:if="${successMessage}"
+       class="alert alert-success">
+    <span th:text="${successMessage}">Opgeslagen!</span>
+  </div>
+  <table>
+    <thead>
+    <tr>
+      <th>Huishoud Taak</th>
+      <th>Frequentie per week</th>
+      <th>Locatie</th>
+      <th>Verantwoordelijke</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="chore : ${chores}">
+      <td th:text="${chore.choreName}">Huishoud Taak</td>
+      <td th:text="${chore.choreFrequency}">Frequentie per week</td>
+      <td th:text="${chore.location}">Locatie</td>
+      <td th:text="${chore.responsibility}">Verantwoordelijke</td>
+      <td>
+        <a th:href="@{/chores/edit/{id}(id=${chore.getId()})}">Bewerken</a>
+      </td>
+      <td>
+        <a th:href="@{/chores/delete/{id}(id=${chore.getId()})}">Verwijderen</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <p><a th:href="@{/chores/add}">Nieuwe taak toevoegen</a></p>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${paginaTitel}">Huishoud Manager</title>
+</head>
+<body>
+  <h1 th:text="${paginaTitel}"></h1>
+
+  <p>De huishoud manager is ontwikkeld door <span th:text="${naam}"></span></p>
+  <p>Datum: <span th:text="${datum}"></span></p>
+  <a href="/chores">Naar huishoud taken</a>
+</body>
+</html>
