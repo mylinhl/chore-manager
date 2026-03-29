@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="nl" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="baseheader(title)">
+    <meta charset="UTF-8">
+
+    <title th:replace="$(title)">This is the base title</title>
+
+    <link rel="stylesheet" type="text/css" href="/style.css">
+</head>
+
+<body>
+<nav th:fragment="navbar">
+    <ul>
+        <li>
+            <a href="/chores"
+               th:classappend="${activePage == 'chores'} ? 'active' : ''">
+                Huishoud Taken
+            </a>
+        </li>
+        <li>
+            <a href="/familymembers/all"
+               th:classappend="${activePage == 'familymembers'} ? 'active' : ''">
+                Familie Leden
+            </a>
+        </li>
+    </ul>
+</nav>
+<footer th:fragment="footer" class="footer">
+    <p>Huishoud Manager &mdash; Groningen</p>
+</footer>
+</body>
+</html>
