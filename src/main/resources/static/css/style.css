@@ -1,0 +1,27 @@
+a {
+    color: var(--bs-teal);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+button {
+    border: 1px teal;
+    background-color: teal;
+}
+
+.error {
+    color: red;
+    font-size: 0.85em;
+    display: block;
+}
+
+.active {
+    font-weight: bold;
+}
+
+.footer {
+    font-weight: bold;
+}
