@@ -3,8 +3,6 @@ package nl.miwnn.cohort19.mylinh.ChoreManager.controller;
 import jakarta.validation.Valid;
 import nl.miwnn.cohort19.mylinh.ChoreManager.model.Chore;
 import nl.miwnn.cohort19.mylinh.ChoreManager.model.Image;
-import nl.miwnn.cohort19.mylinh.ChoreManager.repository.ChoreRepository;
-import nl.miwnn.cohort19.mylinh.ChoreManager.repository.FamilyMemberRepository;
 import nl.miwnn.cohort19.mylinh.ChoreManager.repository.ImageRepository;
 import nl.miwnn.cohort19.mylinh.ChoreManager.service.ChoreService;
 import nl.miwnn.cohort19.mylinh.ChoreManager.service.FamilyMemberService;
@@ -60,6 +58,7 @@ public class ChoreController {
         log.debug("Huishoud taken overzicht opgevraagd, {} taken aanwezig.", chores.size());
         model.addAttribute("paginaTitel", "Huishoudtaken Overzicht");
         model.addAttribute("chores", chores);
+        model.addAttribute("newChore", new Chore());
         model.addAttribute("allFamilyMembers", familyMemberService.getAllFamilyMembers());
         model.addAttribute("activePage", "chores");
         return "chores";
@@ -69,14 +68,14 @@ public class ChoreController {
     public String addChoreForm(Model model) {
         log.debug("Formulier voor nieuwe huishoud taak opgevraagd.");
         model.addAttribute("paginaTitel", "Huishoud Taak Toevoegen");
-        model.addAttribute("chore", new Chore());
+        model.addAttribute("newChore", new Chore());
         model.addAttribute("allFamilyMembers", familyMemberService.getAllFamilyMembers());
         return "add-chore";
     }
 
     @PostMapping("/add")
-    public String processAddChore(@ModelAttribute Chore chore) {
-        choreService.saveChore(chore);
+    public String processAddChore(@ModelAttribute Chore newChore) {
+        choreService.saveChore(newChore);
         return "redirect:/chores";
     }
 
@@ -109,9 +108,9 @@ public class ChoreController {
 
     @PostMapping("/save")
     public String saveChore(
-            @Valid @ModelAttribute Chore chore,
-            @RequestParam("coverImageFile") MultipartFile coverImageFile,
+            @Valid @ModelAttribute Chore newChore,
             BindingResult bindingResult,
+            @RequestParam("coverImageFile") MultipartFile coverImageFile,
             RedirectAttributes redirectAttributes,
             Model model) throws IOException {
 
@@ -120,7 +119,7 @@ public class ChoreController {
             image.setData(coverImageFile.getBytes());
             image.setContentType(coverImageFile.getContentType());
             imageRepository.save(image);
-            chore.setCoverImage(image);
+            newChore.setCoverImage(image);
         }
 
         if (bindingResult.hasErrors()) {
@@ -129,7 +128,7 @@ public class ChoreController {
             return "add-chore";
         }
 
-        choreService.saveChore(chore);
+        choreService.saveChore(newChore);
 
         redirectAttributes.addFlashAttribute("successMessage", "Taak succesvol toegevoegd!");
         return "redirect:/chores";

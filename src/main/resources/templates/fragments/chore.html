@@ -1,0 +1,43 @@
+<div th:fragment="newChoreForm(newChore)">
+  <form th:action="@{/chores/save}" th:object="${newChore}" method="post" enctype="multipart/form-data">
+    <input type="hidden" th:field="*{id}">
+    <div>
+      <label for="choreName">Huishoud Taak</label>
+      <input type="text" id="choreName" th:field="*{choreName}">
+      <span th:if="${#fields.hasErrors('choreName')}" th:errors="*{choreName}" class="error"></span>
+    </div>
+    <div>
+      <label for="choreFrequency">Frequentie per Week</label>
+      <input type="text" id="choreFrequency" th:field="*{choreFrequency}"/>
+      <span th:if="${#fields.hasErrors('choreFrequency')}" th:errors="*{choreFrequency}" class="error"></span>
+    </div>
+    <div>
+      <label for="location">Locatie</label>
+      <input type="text" id="location" th:field="*{location}"/>
+      <span th:if="${#fields.hasErrors('location')}" th:errors="*{location}" class="error"></span>
+    </div>
+    <div>
+      <label for="description">Beschrijving</label>
+      <textarea id="description" th:field="*{description}"
+                rows="5" placeholder="Optionele beschrijving van de huishoudtaak"></textarea>
+    </div>
+    <div>
+      <label for="familymembers">Verantwoordelijke</label>
+      <select id="familymembers" th:field="*{familymembers}" multiple>
+        <option th:each="familymember : ${allFamilyMembers}"
+                th:value="${familymember.memberId}"
+                th:text="${familymember.fullName}">
+        </option>
+      </select>
+      <span th:if="${#fields.hasErrors('familymembers')}" th:errors="*{familymembers}" class="error"></span>
+    </div>
+    <div>
+      <label for="coverImageFile">Cover afbeelding</label>
+      <input type="file" id="coverImageFile" name="coverImageFile" accept="image/*">
+
+      <span th:if="${#fields.hasErrors('coverImage')}"
+            th:errors="*{coverImage}">Fout</span>
+    </div>
+    <button type="submit">Opslaan</button>
+  </form>
+</div>

@@ -84,10 +84,33 @@
       </div>
     </div>
   </div>
-  <p><a sec:authorize="hasRole('ADMIN')" th:href="@{/chores/add}">Nieuwe taak toevoegen</a></p>
+<!--  <p><a sec:authorize="hasRole('ADMIN')" th:href="@{/chores/add}">Nieuwe taak toevoegen</a></p>-->
+
+  <!-- Button trigger modal -->
+  <button sec:authorize="hasRole('ADMIN')" type="button" data-bs-toggle="modal" data-bs-target="#newChoreForm">
+    Nieuwe taak toevoegen
+  </button>
+
+  <!-- Modal -->
+  <div sec:authorize="hasRole('ADMIN')" class="modal fade" id="newChoreForm" tabindex="-1" aria-labelledby="newChoreFormLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="newChoreFormLabel">Nieuwe Huishoudtaak Toevoegen</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div th:replace="~{fragments/chore :: newChoreForm(newChore)}"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-</body>
 
 <footer th:replace="~{fragments/general :: footer}"></footer>
 <div th:replace="~{fragments/general :: scripts}"></div>
+</body>
 </html>
