@@ -6,40 +6,63 @@
 </head>
 <body>
 <div class="container mt-4">
-<nav th:replace="~{fragments/general :: navbar}"></nav>
-<h1>Familie Leden</h1>
-<table>
-    <thead>
-    <tr>
-        <th>Voornaam</th>
-        <th>Achternaam</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="familymember : ${allFamilyMembers}">
-        <td th:text="${familymember.firstName}">Voornaam</td>
-        <td th:text="${familymember.lastName}">Achternaam</td>
-    </tr>
-    </tbody>
-</table>
-<h2>Familie Lid Toevoegen</h2>
-<form th:action="@{/familymembers/save}" th:object="${newFamilyMember}" method="post">
-    <input type="hidden" th:field="*{memberId}">
-    <div>
-        <label for="firstName">Voornaam</label>
-        <input type="text" id="firstName" th:field="*{firstName}">
-        <span th:if="${#fields.hasErrors('firstName')}"
-              th:errors="*{firstName}">Fout</span>
+    <nav th:replace="~{fragments/general :: navbar}"></nav>
+    <h1 class="main-title">Familie Leden</h1>
+    <div class="row">
+        <div class="col-md-4 mb-3" th:each="familymember : ${allFamilyMembers}">
+            <div class="card h-100">
+
+                <img th:if="${familymember.image != null}"
+                     th:src="@{/images/{id}(id=${familymember.image.id})}"
+                     class="card-img-top"
+                     th:alt="${familymember.firstName + ' ' + familymember.lastName}"
+                     style="height: 200px; object-fit: cover;">
+
+                <div class="card-body">
+                    <h5 class="card-title"
+                        th:text="${familymember.firstName + ' ' + familymember.lastName}">
+                        Naam
+                    </h5>
+                </div>
+
+                <div class="card-footer d-flex justify-content-between">
+                    <a sec:authorize="hasRole('ADMIN')" th:href="@{/familymembers/edit/{id}(id=${familymember.memberId})}"
+                       class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
+
+                    <a sec:authorize="hasRole('ADMIN')" th:href="@{/familymembers/delete/{id}(id=${familymember.memberId})}"
+                       class="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
     </div>
-    <div>
-        <label for="lastName">Achternaam</label>
-        <input type="text" id="lastName" th:field="*{lastName}">
-        <span th:if="${#fields.hasErrors('lastName')}"
-              th:errors="*{lastName}">Fout</span>
+    <div sec:authorize="hasRole('ADMIN')">
+        <h2>Familie Lid Toevoegen</h2>
+        <form th:action="@{/familymembers/save}" th:object="${newFamilyMember}" method="post"
+              enctype="multipart/form-data">
+            <input type="hidden" th:field="*{memberId}">
+
+            <label for="firstName">Voornaam</label>
+            <input type="text" id="firstName" th:field="*{firstName}">
+            <span th:if="${#fields.hasErrors('firstName')}"
+                  th:errors="*{firstName}" class="error">Fout</span>
+
+            <label for="lastName">Achternaam</label>
+            <input type="text" id="lastName" th:field="*{lastName}">
+            <span th:if="${#fields.hasErrors('lastName')}"
+                  th:errors="*{lastName}" class="error">Fout</span>
+
+            <label for="image">Profielfoto</label>
+            <input type="file" id="image" name="imageFile" accept="image/*">
+
+            <button type="submit" th:text="${newFamilyMember.memberId} != null ? 'Opslaan' : 'Toevoegen'"></button>
+        </form>
     </div>
-    <button type="submit">Toevoegen</button>
-</form>
-<p><a th:href="@{/chores}">Terug naar het overzicht</a></p>
+    <p><a th:href="@{/chores}">Terug naar het overzicht</a></p>
 </div>
 </body>
 <footer th:replace="~{fragments/general :: footer}"></footer>

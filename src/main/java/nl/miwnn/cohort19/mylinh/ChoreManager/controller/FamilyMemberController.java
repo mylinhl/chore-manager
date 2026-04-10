@@ -2,17 +2,19 @@ package nl.miwnn.cohort19.mylinh.ChoreManager.controller;
 
 import jakarta.validation.Valid;
 import nl.miwnn.cohort19.mylinh.ChoreManager.model.FamilyMember;
-import nl.miwnn.cohort19.mylinh.ChoreManager.repository.FamilyMemberRepository;
+import nl.miwnn.cohort19.mylinh.ChoreManager.model.Image;
+import nl.miwnn.cohort19.mylinh.ChoreManager.repository.ImageRepository;
+import nl.miwnn.cohort19.mylinh.ChoreManager.service.FamilyMemberService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.io.IOException;
 
 /**
  * @author My Linh Lu
@@ -22,39 +24,80 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/familymembers")
 public class FamilyMemberController {
 
-    private static final Logger log = LoggerFactory.getLogger(FamilyMemberController.class);
-    private final FamilyMemberRepository familyMemberRepository;
+    private static final Logger log = LoggerFactory.getLogger(FamilyMemberController.class);;
+    private final FamilyMemberService familyMemberService;
+    private final ImageRepository imageRepository;
 
-    public FamilyMemberController(FamilyMemberRepository familyMemberRepository) {
-        this.familyMemberRepository = familyMemberRepository;
+    public FamilyMemberController(FamilyMemberService familyMemberService, ImageRepository imageRepository) {
+        this.familyMemberService = familyMemberService;
+        this.imageRepository = imageRepository;
     }
 
-    @GetMapping("/all")
+    @GetMapping({"", "/","/all"})
     public String showOverviewWithForm(Model model) {
         log.debug("Familie leden overzicht opgevraagd");
-        model.addAttribute("allFamilyMembers", familyMemberRepository.findAll());
+        model.addAttribute("allFamilyMembers", familyMemberService.getAllFamilyMembers());
         model.addAttribute("newFamilyMember", new FamilyMember());
-        model.addAttribute("activePage", "chores");
+        model.addAttribute("activePage", "family-members");
 
         return "family-members";
     }
 
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        FamilyMember familyMember = familyMemberService.getFamilyMemberById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Familielid niet gevonden: " + id));
+        model.addAttribute("newFamilyMember", familyMember);
+        model.addAttribute("allFamilyMembers", familyMemberService.getAllFamilyMembers());
+        model.addAttribute("paginaTitel", "Familielid Bewerken");
+        model.addAttribute("activePage", "family-members");
+        return "family-members";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteChore(@PathVariable Long id) {
+        log.info("Verwijderverzoek voor taak: {}", id);
+        familyMemberService.deleteFamilyMemberById(id);
+        return "redirect:/familymembers/all";
+    }
+
     @PostMapping("/save")
     public String saveFamilyMember(
-            @Valid @ModelAttribute("newFamilyMember") FamilyMember familyMember,
+            @Valid @ModelAttribute("newFamilyMember") FamilyMember newFamilyMember,
             BindingResult bindingResult,
-            RedirectAttributes redirectAttributes) {
+            @RequestParam("imageFile") MultipartFile imageFile,
+            Model model,
+            RedirectAttributes redirectAttributes) throws IOException {
 
-        log.info("Familie Lid opslaan: {}", familyMember.getFullName());
-
+        log.debug("opslaan");
         if (bindingResult.hasErrors()) {
             log.warn("Validatiefouten bij opslaan: {}", bindingResult.getErrorCount());
+            log.debug("{}", bindingResult.getAllErrors());
+            model.addAttribute("allFamilyMembers", familyMemberService.getAllFamilyMembers());
+            model.addAttribute("activePage", "family-members");
             return "family-members";
         }
 
-        familyMemberRepository.save(familyMember);
-        log.info("Nieuw familie lid toegevoegd: {}", familyMember.getFullName());
+        // Handle image upload separately
+        if (!imageFile.isEmpty()) {
+            log.debug("image is niet leeg: {}", imageFile);
+            Image image = new Image();
+            image.setData(imageFile.getBytes());
+            image.setContentType(imageFile.getContentType());
+            imageRepository.save(image);
+            newFamilyMember.setImage(image); // associate uploaded image
+        } else if (newFamilyMember.getMemberId() != null) {
+            // Editing existing member, keep old image
+            FamilyMember existing = familyMemberService
+                    .getFamilyMemberById(newFamilyMember.getMemberId())
+                    .orElseThrow();
+            newFamilyMember.setImage(existing.getImage());
+        }
+
+        familyMemberService.saveFamilyMember(newFamilyMember);
+        log.info("Familie lid opgeslagen: {}", newFamilyMember.getFullName());
         redirectAttributes.addFlashAttribute("successMessage", "Familie lid succesvol opgeslagen");
+
         return "redirect:/familymembers/all";
     }
 }

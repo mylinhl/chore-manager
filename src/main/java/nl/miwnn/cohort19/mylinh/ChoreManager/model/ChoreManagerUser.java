@@ -29,26 +29,36 @@ public class ChoreManagerUser implements UserDetails {
 
     private Boolean administrator;
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public Boolean getAdministrator() {
+        return administrator;
+    }
+
+    public void setAdministrator(Boolean administrator) {
+        this.administrator = administrator;
+    }
+
+    private String role;
+
     public ChoreManagerUser() {
     }
 
-    public ChoreManagerUser(String username, String password, Boolean administrator) {
-        this.administrator = administrator;
+    public ChoreManagerUser(String username, String password, String role) {
         this.password = password;
         this.username = username;
+        this.role = role;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-
-        if (administrator) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        }
-
-        return authorities;
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role));
     }
 
     @Override
@@ -69,14 +79,6 @@ public class ChoreManagerUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
-    }
-
-    public Boolean getAdministrator() {
-        return administrator;
-    }
-
-    public void setAdministrator(Boolean administrator) {
-        this.administrator = administrator;
     }
 
     public Long getId() {

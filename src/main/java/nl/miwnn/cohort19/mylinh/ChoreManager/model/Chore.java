@@ -38,7 +38,31 @@ public class Chore {
             joinColumns = @JoinColumn(name = "chore_id"),
             inverseJoinColumns = @JoinColumn(name = "member_id")
     )
+
     private List<FamilyMember> familymembers = new ArrayList<>();
+
+    @Column(nullable = true, length = 2000)
+    private String description;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cover_image_id")
+    private Image coverImage;
+
+    public Image getCoverImage() {
+        return coverImage;
+    }
+
+    public void setCoverImage(Image coverImage) {
+        this.coverImage = coverImage;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public Chore(String choreName, int choreFrequency, String location) {
         this.choreName = choreName;

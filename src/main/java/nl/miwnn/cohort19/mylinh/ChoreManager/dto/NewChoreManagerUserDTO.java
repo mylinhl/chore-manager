@@ -8,10 +8,20 @@ public class NewChoreManagerUserDTO {
     private String username;
     private String plainPassword;
     private String checkPassword;
-    private boolean administrator;
+    private String role;
+
+    public NewChoreManagerUserDTO() {}
 
     public String getUsername() {
         return username;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public void setUsername(String username) {
@@ -32,13 +42,5 @@ public class NewChoreManagerUserDTO {
 
     public void setCheckPassword(String checkPassword) {
         this.checkPassword = checkPassword;
-    }
-
-    public boolean isAdministrator() {
-        return administrator;
-    }
-
-    public void setAdministrator(boolean administrator) {
-        this.administrator = administrator;
     }
 }

@@ -5,6 +5,7 @@ import nl.miwnn.cohort19.mylinh.ChoreManager.model.Chore;
 import nl.miwnn.cohort19.mylinh.ChoreManager.model.SubTask;
 import nl.miwnn.cohort19.mylinh.ChoreManager.repository.ChoreRepository;
 import nl.miwnn.cohort19.mylinh.ChoreManager.repository.SubTaskRepository;
+import nl.miwnn.cohort19.mylinh.ChoreManager.service.ChoreService;
 import nl.miwnn.cohort19.mylinh.ChoreManager.service.SubTaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +25,11 @@ import org.thymeleaf.standard.expression.SubtractionExpression;
 public class SubTaskController {
 
     private static final Logger log = LoggerFactory.getLogger(SubTaskController.class);
-    private final SubTaskRepository subTaskRepository;
-    private final ChoreRepository choreRepository;
+    private final ChoreService choreService;
     private final SubTaskService subTaskService;
 
-    public SubTaskController(SubTaskRepository subTaskRepository, ChoreRepository choreRepository, SubTaskService subTaskService) {
-        this.subTaskRepository = subTaskRepository;
-        this.choreRepository = choreRepository;
+    public SubTaskController(ChoreService choreService, SubTaskService subTaskService) {
+        this.choreService = choreService;
         this.subTaskService = subTaskService;
     }
 
@@ -40,15 +39,8 @@ public class SubTaskController {
         model.addAttribute("paginaTitel", "Subtaak aan Huishoud Taak Toevoegen");
         model.addAttribute("subtask", new SubTask());
         model.addAttribute("allSubtasks", subTaskService.getAllSubTasks());
-        model.addAttribute("allChores", choreRepository.findAll());
+        model.addAttribute("allChores", choreService.getAllChores(null));
         return "add-subtask";
-    }
-
-    @PostMapping("/add")
-    public String processAddChore(@ModelAttribute SubTask subtask) {
-        log.info("Nieuwe subtaak toegevoegd: {}", subtask.getSubtaskName());
-        subTaskRepository.save(subtask);
-        return "redirect:/chores";
     }
 
     @PostMapping("/save")
@@ -62,36 +54,22 @@ public class SubTaskController {
 
         if (bindingResult.hasErrors()) {
             log.warn("Validatiefouten bij opslaan: {}", bindingResult.getErrorCount());
-            model.addAttribute("allSubtasks", subTaskRepository.findAll());
+            model.addAttribute("allSubtasks", subTaskService.getAllSubTasks());
             return "add-subtask";
         }
 
-        subTaskRepository.save(subtask);
+        subTaskService.createSubTask(subtask);
         log.info("Subtaak opgeslagen: {}", subtask.getSubtaskName());
-
         redirectAttributes.addFlashAttribute("successMessage", "Subtaak succesvol toegevoegd!");
         return "redirect:/chores";
     }
 
-    @PostMapping("/check/{subtaskId}")
-    public String checkSubTask(@PathVariable Long subtaskId, String choreName) {
-        subTaskRepository.findById(subtaskId).ifPresent(subTask -> {
-            if (subTask.getFinished()) {
-                subTask.setFinished(false);
-                subTaskRepository.save(subTask);
-            }
-        });
-        return "redirect:/chores" + choreName;
-    }
+    @PostMapping("/toggle/{id}")
+    public String toggleSubTask(@PathVariable Long id,
+                                @RequestParam String choreName) {
 
-    @PostMapping("/uncheck/{id}")
-    public String uncheckSubTask(@PathVariable Long id, String choreName) {
-        subTaskRepository.findById(id).ifPresent(subtask -> {
-            if (!subtask.getFinished()) {
-                subtask.setFinished(true);
-                subTaskRepository.save(subtask);
-            }
-        });
-        return "redirect:/chores" + choreName;
+        subTaskService.toggleSubTaskFinished(id);
+
+        return "redirect:/chores/" + choreName;
     }
 }

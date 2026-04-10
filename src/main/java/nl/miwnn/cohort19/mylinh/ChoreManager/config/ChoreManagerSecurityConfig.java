@@ -22,7 +22,6 @@ import java.util.UUID;
 @Configuration
 @EnableWebSecurity
 public class ChoreManagerSecurityConfig {
-    private static final Logger log = LoggerFactory.getLogger(ChoreManagerSecurityConfig.class);
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
@@ -30,15 +29,19 @@ public class ChoreManagerSecurityConfig {
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers(
                             "/",
+                            "/about-us",
                             "/chores",
                             "/chores/detail/**",
                             "/css/**",
+                            "/familymembers",
+                            "/images/**",
                             "/webjars/**"
                     ).permitAll()
                     .requestMatchers(
                             "/chores/edit/**",
                             "/chores/add",
-                            "/chores/delete"
+                            "/chores/delete",
+                            "/familymembers/save"
                     ).hasRole("ADMIN")
                     .anyRequest().authenticated()
             )
@@ -57,26 +60,4 @@ public class ChoreManagerSecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-//    @Bean
-//    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
-//        String password = UUID.randomUUID().toString();
-//
-//        log.info("==========================================================================");
-//        log.info("Generated password: {}", password);
-//        log.info("==========================================================================");
-//
-//        var gebruiker = User.builder()
-//                .username("gebruiker")
-//                .password(encoder.encode(password))
-//                .roles("USER")
-//                .build();
-//        var admin = User.builder()
-//                .username("admin")
-//                .password(encoder.encode("geheim123"))
-//                .roles("ADMIN")
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(gebruiker, admin);
-//    }
 }

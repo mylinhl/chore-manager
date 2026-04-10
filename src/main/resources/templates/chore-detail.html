@@ -7,47 +7,75 @@
 <body>
 <div class="container mt-4">
 <nav th:replace="~{fragments/general :: navbar}"></nav>
-<h1 th:text="|Details van ${chore.choreName}|"></h1>
+<h1 th:text="${chore.choreName}"></h1>
+  <div class="row">
 
-  <ul>
-    <li>
-      <a th:href="@{/chores/edit/{id}(id=${chore.id})}">Bewerk deze taak</a>
-    </li>
-    <li>
-      <a th:href="@{/chores/delete/{id}(id=${chore.id})}">Verwijder deze taak</a>
-    </li>
-  </ul>
+    <!-- LEFT: Card -->
+    <div class="col-md-4">
+      <div class="card shadow-sm">
 
-<h2>Subtaken</h2>
-<table class="table table-striped table-hover">
-  <thead class="table-dark">
-  <tr>
-    <th>Subtaak</th>
-    <th>Status</th>
-    <th>Aanpassen status</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="subtask : ${chore.subtasks}">
-    <td th:text="${subtask.subtaskName}"></td>
-    <td th:text="${subtask.finished} ? 'Openstaand' : 'Uitgevoerd'">
-      Status
-    </td>
-    <td>
-      <form th:if="${subtask.finished}"
-            th:action="@{/subtasks/check/{id}(id=${subtask.subtaskId})}"
-            method="post">
-        <button type="submit">Uitgevoerd</button>
-      </form>
-      <form th:unless="${subtask.finished}"
-            th:action="@{/subtasks/uncheck/{id}(id=${subtask.subtaskId})}"
-            method="post">
-        <button type="submit">Open zetten</button>
-      </form>
-    </td>
-  </tr>
-  </tbody>
-</table>
+        <img th:if="${chore.coverImage != null}"
+             th:src="@{/images/{id}(id=${chore.coverImage.id})}"
+             class="card-img-top w-100"
+             th:alt="${chore.choreName}"
+             style="height: 250px; object-fit: cover;">
+
+        <div class="card-body">
+          <!-- content -->
+        </div>
+
+        <ul sec:authorize="hasRole('ADMIN')">
+          <li>
+            <a th:href="@{/chores/edit/{id}(id=${chore.id})}">Bewerk deze taak</a>
+          </li>
+          <li>
+            <a th:href="@{/chores/delete/{id}(id=${chore.id})}">Verwijder deze taak</a>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: Table -->
+    <div class="col-md-8">
+      <h2>Uitvoering</h2>
+
+      <table class="table table-striped table-hover">
+        <thead class="table-dark">
+        <tr>
+          <th>Subtaak</th>
+          <th>Status</th>
+          <th>Aanpassen status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="subtask : ${chore.subtasks}">
+          <td th:text="${subtask.subtaskName}"></td>
+          <td>
+            <button type="button"
+                    th:text="${subtask.finished} ? 'Nog te doen' : 'Uitgevoerd'"
+                    th:classappend="${subtask.finished} ? 'btn btn-danger' : 'btn btn-success'">
+            </button>
+          </td>
+          <td>
+            <form th:action="@{/subtasks/toggle/{id}(id=${subtask.subtaskId})}" method="post">
+              <input type="hidden" name="choreName" th:value="${chore.choreName}">
+              <button type="submit"
+                      th:text="${subtask.finished} ? 'Uitvoeren' : 'Open zetten'">
+              </button>
+            </form>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <button sec:authorize="hasRole('ADMIN')" type="button"
+              th:onclick="|window.location.href='@{/subtasks/add}'|">
+        Subtaak toevoegen
+      </button>
+    </div>
+
+  </div>
 <p><a th:href="@{/chores}">Terug naar het overzicht</a></p>
 </div>
 </body>

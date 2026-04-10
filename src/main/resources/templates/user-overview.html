@@ -1,10 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/general :: baseheader(~{:: title})}">
+    <title th:text="${paginaTitel}">Gebruikersbeheer</title>
 </head>
 <body>
-$END$
+<div class="container mt-4">
+    <nav th:replace="~{fragments/general :: navbar}"></nav>
+    <div th:if="${successMessage}"
+         class="alert alert-success"
+         th:text="${successMessage}"></div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Gebruikersnaam</th>
+            <th>Rol</th>
+            <th>Acties</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.role}"></td>
+            <td>
+                <form th:action="@{/users/delete/{id}(id=${user.id})}"
+                      method="post">
+                    <button type="submit"
+                            class="btn btn-danger btn-sm">
+                        Verwijderen
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/users/add}" class="btn btn-primary">
+        Nieuwe gebruiker
+    </a>
+    <p><a th:href="@{/chores}">Terug naar het overzicht</a></p>
+</div>
 </body>
+<footer th:replace="~{fragments/general :: footer}"></footer>
+<div th:replace="~{fragments/general :: scripts}"></div>
 </html>

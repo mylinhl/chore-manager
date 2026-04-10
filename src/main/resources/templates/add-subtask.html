@@ -7,6 +7,7 @@
 <body>
 <div class="container mt-4">
   <nav th:replace="~{fragments/general :: navbar}"></nav>
+  <h1 class="main-title" th:text="${paginaTitel}">Subtaak Toevoegen</h1>
   <form th:action="@{/subtasks/save}" th:object="${subtask}" method="post">
     <input type="hidden" th:field="*{subtaskId}">
     <div>
@@ -26,7 +27,7 @@
     </div>
     <button type="submit">Opslaan</button>
   </form>
-  <p><a th:href="@{/subtasks}">Terug naar het overzicht</a></p>
+  <p><a th:href="@{/chores}">Terug naar het overzicht</a></p>
 </div>
 </body>
 <footer th:replace="~{fragments/general :: footer}"></footer>

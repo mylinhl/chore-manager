@@ -5,15 +5,19 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import nl.miwnn.cohort19.mylinh.ChoreManager.model.Chore;
 import nl.miwnn.cohort19.mylinh.ChoreManager.model.ChoreManagerUser;
 import nl.miwnn.cohort19.mylinh.ChoreManager.model.FamilyMember;
+import nl.miwnn.cohort19.mylinh.ChoreManager.model.SubTask;
 import nl.miwnn.cohort19.mylinh.ChoreManager.repository.ChoreRepository;
 import nl.miwnn.cohort19.mylinh.ChoreManager.repository.FamilyMemberRepository;
+import nl.miwnn.cohort19.mylinh.ChoreManager.repository.SubTaskRepository;
 import nl.miwnn.cohort19.mylinh.ChoreManager.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
@@ -26,30 +30,34 @@ import java.util.UUID;
  * @author My Linh Lu
  * Manage data when initializing app
  */
-@Controller
+@Component
 public class InitializeController {
 
     private final ChoreRepository choreRepository;
     private final FamilyMemberRepository familyMemberRepository;
+    private final SubTaskRepository subTaskRepository;
+    @Autowired
     private final UserRepository userRepository;
 
+    @Autowired
     private final PasswordEncoder passwordEncoder;
 
-    private final Logger log = (Logger) LoggerFactory.getLogger(InitializeController.class);
+    private final Logger log = LoggerFactory.getLogger(InitializeController.class);
 
     public InitializeController(
             ChoreRepository choreRepository,
-            FamilyMemberRepository familyMemberRepository,
+            FamilyMemberRepository familyMemberRepository, SubTaskRepository subTaskRepository,
             UserRepository userRepository,
             PasswordEncoder passwordEncoder) {
         this.choreRepository = choreRepository;
         this.familyMemberRepository = familyMemberRepository;
+        this.subTaskRepository = subTaskRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     @EventListener(ContextRefreshedEvent.class)
-    public void seed() {
+    public void seed() throws Exception {
         if (familyMemberRepository.count() == 0) {
             seedFamilyMembers();
         }
@@ -57,16 +65,15 @@ public class InitializeController {
             seedChores();
         }
         if (userRepository.count() == 0) {
-            String password = UUID.randomUUID().toString();
-
-            log.info("=============================================");
-            log.info("Generated password for 'admin': {}", password);
-            log.info("=============================================");
             ChoreManagerUser admin = new ChoreManagerUser(
                     "admin",
-                    passwordEncoder.encode(password),
-                    true);
+                    passwordEncoder.encode("geheim123"),
+                    "ADMIN"
+            );
             userRepository.save(admin);
+        }
+        if (subTaskRepository.count() == 0) {
+            seedSubTasks();
         }
     }
 
@@ -109,6 +116,25 @@ public class InitializeController {
         } catch (IOException e) {
             throw new RuntimeException(
                     "Kon chores.csv niet inlezen", e);
+        }
+    }
+
+    private void seedSubTasks() throws Exception {
+        List<Chore> chores = choreRepository.findAll();
+
+        for (Chore chore : chores) {
+            if (chore.getChoreName().equalsIgnoreCase("Vaatwasser draaien")) {
+                subTaskRepository.save(new SubTask(chore, "Bestek sorteren"));
+                subTaskRepository.save(new SubTask(chore, "Borden stapelen"));
+                subTaskRepository.save(new SubTask(chore, "Glazen schoonmaken"));
+            }
+
+            if (chore.getChoreName().equalsIgnoreCase("WC schoonmaken")) {
+                subTaskRepository.save(new SubTask(chore, "WC reiniger aanbrengen"));
+                subTaskRepository.save(new SubTask(chore, "WC reiniger in schrobben"));
+                subTaskRepository.save(new SubTask(chore, "WC reiniger 5 min laten inwerken"));
+                subTaskRepository.save(new SubTask(chore, "Doorspoelen en na schrobben"));
+            }
         }
     }
 }

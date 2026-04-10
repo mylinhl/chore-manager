@@ -7,7 +7,8 @@
 <body>
 <div class="container mt-4">
 <nav th:replace="~{fragments/general :: navbar}"></nav>
-    <form th:action="@{/chores/save}" th:object="${chore}" method="post">
+    <h1 class="main-title" th:text="${paginaTitel}">Huishoud Taak Toevoegen</h1>
+    <form th:action="@{/chores/save}" th:object="${chore}" method="post" enctype="multipart/form-data">
         <input type="hidden" th:field="*{id}">
         <div>
             <label for="choreName">Huishoud Taak</label>
@@ -25,6 +26,11 @@
             <span th:if="${#fields.hasErrors('location')}" th:errors="*{location}" class="error"></span>
         </div>
         <div>
+        <label for="description">Beschrijving</label>
+        <textarea id="description" th:field="*{description}"
+                  rows="5" placeholder="Optionele beschrijving van de huishoudtaak"></textarea>
+        </div>
+        <div>
             <label for="familymembers">Verantwoordelijke</label>
             <select id="familymembers" th:field="*{familymembers}" multiple>
                 <option th:each="familymember : ${allFamilyMembers}"
@@ -33,6 +39,13 @@
                 </option>
             </select>
             <span th:if="${#fields.hasErrors('familymembers')}" th:errors="*{familymembers}" class="error"></span>
+        </div>
+        <div>
+            <label for="coverImageFile">Cover afbeelding</label>
+            <input type="file" id="coverImageFile" name="coverImageFile" accept="image/*">
+
+            <span th:if="${#fields.hasErrors('coverImage')}"
+                  th:errors="*{coverImage}">Fout</span>
         </div>
         <button type="submit">Opslaan</button>
     </form>

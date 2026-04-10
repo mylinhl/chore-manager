@@ -44,7 +44,7 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a th:classappend="${activePage == 'about-us'} ? 'active' : ''"
-                       class="nav-link" href="/about-us.html">Over Ons</a>
+                       class="nav-link" href="/about-us">Over Ons</a>
                 </li>
                 <li>
                     <a href="/chores"
@@ -53,14 +53,15 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/familymembers/all"
-                       class="nav-link" th:classappend="${activePage == 'familymembers'} ? 'active' : ''">
+                    <a href="/familymembers"
+                       class="nav-link" th:classappend="${activePage == 'family-members'} ? 'active' : ''">
                         Familie Leden
                     </a>
                 </li>
             </ul>
             <!-- Left links -->
     </div>
+    <a sec:authorize="hasRole('ADMIN')" th:href="@{/users}">Gebruikersbeheer</a>
     <form th:action="@{/logout}" method ="post" sec:authorize="isAuthenticated()" style="display: inline;">
         <button type="submit">Uitloggen</button>
     </form>
@@ -73,7 +74,7 @@
     <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
         <!-- Left -->
         <div class="me-5 d-none d-lg-block">
-            <span>Get connected with us on social networks:</span>
+            <span>Vind ons op social media:</span>
         </div>
         <!-- Left -->
 
@@ -111,11 +112,10 @@
                 <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
                     <!-- Content -->
                     <h6 class="text-uppercase fw-bold mb-4">
-                        <i class="fas fa-gem me-3"></i>Company name
+                        <i class="fas fa-gem me-3"></i>Huishoud Manager
                     </h6>
                     <p>
-                        Here you can use rows and columns to organize your footer content. Lorem ipsum
-                        dolor sit amet, consectetur adipisicing elit.
+                        Ons doel is om het huishouden inzichtelijker te maken en samenwerken makkelijker te maken.
                     </p>
                 </div>
                 <!-- Grid column -->
@@ -124,19 +124,10 @@
                 <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
                     <!-- Links -->
                     <h6 class="text-uppercase fw-bold mb-4">
-                        Products
+                        Producten
                     </h6>
                     <p>
-                        <a href="#!" class="text-reset">Angular</a>
-                    </p>
-                    <p>
-                        <a href="#!" class="text-reset">React</a>
-                    </p>
-                    <p>
-                        <a href="#!" class="text-reset">Vue</a>
-                    </p>
-                    <p>
-                        <a href="#!" class="text-reset">Laravel</a>
+                        <a href="/chores" class="text-reset">Huishoud Manager App</a>
                     </p>
                 </div>
                 <!-- Grid column -->
@@ -145,19 +136,19 @@
                 <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
                     <!-- Links -->
                     <h6 class="text-uppercase fw-bold mb-4">
-                        Useful links
+                        Handige Links
                     </h6>
                     <p>
-                        <a href="#!" class="text-reset">Pricing</a>
+                        <a href="#!" class="text-reset">Aanmelden</a>
                     </p>
                     <p>
-                        <a href="#!" class="text-reset">Settings</a>
+                        <a href="#!" class="text-reset">Blog</a>
                     </p>
                     <p>
-                        <a href="#!" class="text-reset">Orders</a>
+                        <a href="#!" class="text-reset">Prijzen</a>
                     </p>
                     <p>
-                        <a href="#!" class="text-reset">Help</a>
+                        <a href="#!" class="text-reset">Support</a>
                     </p>
                 </div>
                 <!-- Grid column -->
@@ -166,10 +157,10 @@
                 <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
                     <!-- Links -->
                     <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
-                    <p><i class="fas fa-home me-3"></i> New York, NY 10012, US</p>
+                    <p><i class="fas fa-home me-3"></i> Babbelaar 18 9746RM Groningen</p>
                     <p>
                         <i class="fas fa-envelope me-3"></i>
-                        info@example.com
+                        info@huishoudmanager.nl
                     </p>
                     <p><i class="fas fa-phone me-3"></i> + 01 234 567 88</p>
                     <p><i class="fas fa-print me-3"></i> + 01 234 567 89</p>
@@ -183,8 +174,9 @@
 
     <!-- Copyright -->
     <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
-        © 2021 Copyright:
-        <a class="text-reset fw-bold" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+        © 2026 Copyright:
+        <a class="text-reset fw-bold" href="https://www.itacademy.nl/opleidingen/make-it-work-software-engineering">
+            Make IT Work</a>
     </div>
     <!-- Copyright -->
 </footer>

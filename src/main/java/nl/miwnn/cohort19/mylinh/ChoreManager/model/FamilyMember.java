@@ -1,9 +1,6 @@
 package nl.miwnn.cohort19.mylinh.ChoreManager.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 /**
@@ -22,6 +19,18 @@ public class FamilyMember {
 
     @NotBlank(message = "Achternaam mag niet leeg zijn")
     private String lastName;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id")
+    private Image image;
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
 
     public FamilyMember() {}
 

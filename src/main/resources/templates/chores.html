@@ -7,59 +7,84 @@
 <body>
 <div class="container mt-4">
 <nav th:replace="~{fragments/general :: navbar}"></nav>
-  <h1 th:text="${paginaTitel}"></h1>
-  <form method="get" action="/chores">
-    <input type="text" name="query"
-           th:value="${query}"
-           placeholder="Zoek op taaknaam..."/>
-    <button type="submit">Zoeken</button>
+  <h1 class="main-title" th:text="${paginaTitel}"></h1>
+  <form method="get" th:action="@{/chores}">
+    <label for="familymember"></label>
+    <select id="familymember" name="familymember">
+      <option value="">-- Filter op familielid --</option>
+      <option th:each="familymember : ${allFamilyMembers}"
+              th:value="${familymember.memberId}"
+              th:text="${familymember.fullName}"
+              th:selected="${familymember.memberId == familymemberSelected}">
+      </option>
+    </select>
+    <button type="submit">Filteren</button>
   </form>
   <div th:if="${successMessage}"
        class="alert alert-success">
     <span th:text="${successMessage}">Opgeslagen!</span>
   </div>
-  <table class="table table-striped table-hover">
-    <thead class="table-dark">
-    <tr>
-      <th>Huishoud Taak</th>
-      <th>Frequentie per week</th>
-      <th>Locatie</th>
-      <th>Verantwoordelijke</th>
-      <th>Bewerken</th>
-      <th>Verwijderen</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="chore : ${chores}">
-      <td>
-        <a th:href="@{chores/detail/{choreName}(choreName=${chore.choreName})}"
-           th:text="${chore.choreName}">Huishoud Taak Naam</a>
-      </td>
-      <td th:text="${chore.choreFrequency}">Frequentie per week</td>
-      <td th:text="${chore.location}">Locatie</td>
-      <td>
-        <span th:each="familymember, iterStat: ${chore.familymembers}">
-          <span th:text="${familymember.fullName}"></span>
-          <span th:if="!${iterStat.last}">, </span>
-        </span>
-      </td>
-      <td>
-        <a th:href="@{/chores/edit/{id}(id=${chore.id})}"><i class="bi bi-pencil-square"></i></a>
-      </td>
-      <td>
-        <a th:href="@{/chores/delete/{id}(id=${chore.id})}"><i class="bi bi-trash"></i></a>
-      </td>
-    </tr>
-    <tr>
-      <td>TOEVOEGEN HUISHOUD TAAK</td>
-      <td>TOEVOEGEN FREQUENTIE</td>
-      <td>TOEVOEGEN LOCATIE</td>
-      <td>TOEVOEGEN VERANTWOORDELIJKE</td>
-      <td>OPSLAAN KNOP</td>
-    </tr>
-    </tbody>
-  </table>
-  <p><a th:href="@{/chores/add}">Nieuwe taak toevoegen</a></p>
+  <div class="row">
+    <div class="col-md-4 mb-4" th:each="chore : ${chores}">
+      <div class="card h-100 shadow-sm">
+
+        <div class="card-body">
+
+          <!-- Title -->
+          <h5 class="card-title">
+            <a th:href="@{chores/detail/{choreName}(choreName=${chore.choreName})}"
+               th:text="${chore.choreName}">
+              Taak naam
+            </a>
+          </h5>
+
+          <!-- Cover Image -->
+          <img th:if="${chore.coverImage != null}"
+               th:src="@{/images/{id}(id=${chore.coverImage.id})}"
+               class="card-img-top"
+               th:alt="${chore.choreName}"
+               style="height: 200px; object-fit: cover;">
+
+          <!-- Frequency -->
+          <p class="card-text">
+            <strong>Frequentie:</strong>
+            <span th:text="${chore.choreFrequency}"></span>
+          </p>
+
+          <!-- Location -->
+          <p class="card-text">
+            <strong>Locatie:</strong>
+            <span th:text="${chore.location}"></span>
+          </p>
+
+          <!-- Family members -->
+          <p class="card-text">
+            <strong>Verantwoordelijke:</strong><br>
+            <span th:each="familymember, iterStat : ${chore.familymembers}">
+            <span th:text="${familymember.fullName}"></span>
+            <span th:if="!${iterStat.last}">, </span>
+          </span>
+          </p>
+
+        </div>
+
+        <!-- Actions -->
+        <div class="card-footer d-flex justify-content-between">
+          <a sec:authorize="hasRole('ADMIN')" th:href="@{/chores/edit/{id}(id=${chore.id})}"
+             class="btn btn-sm btn-outline-primary">
+            <i class="bi bi-pencil-square"></i>
+          </a>
+
+          <a sec:authorize="hasRole('ADMIN')" th:href="@{/chores/delete/{id}(id=${chore.id})}"
+             class="btn btn-sm btn-outline-danger">
+            <i class="bi bi-trash"></i>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <p><a sec:authorize="hasRole('ADMIN')" th:href="@{/chores/add}">Nieuwe taak toevoegen</a></p>
 </div>
 </body>
 
