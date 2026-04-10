@@ -117,9 +117,11 @@ public class FamilyMemberController {
         }
 
         familyMemberService.saveFamilyMember(newFamilyMember);
+
         log.info("Familie lid opgeslagen: {}", newFamilyMember.getFullName());
+
         redirectAttributes.addFlashAttribute("successMessage", "Familie lid succesvol opgeslagen");
 
-        return "redirect:/familymembers/all";
+        return "redirect:/familymembers";
     }
 }

@@ -25,4 +25,29 @@
         </tr>
     </table>
 </div>
+    <p><a th:href="@{/familymembers}">Terug naar het overzicht</a></p>
+</div>
+
+<div th:fragment="newFamilyMemberForm(newFamilyMember)">
+    <form th:action="@{/familymembers/save}" th:object="${newFamilyMember}" method="post"
+          enctype="multipart/form-data">
+        <input type="hidden" th:field="*{memberId}">
+        <div>
+        <label for="firstName">Voornaam</label>
+        <input type="text" id="firstName" th:field="*{firstName}">
+        <span th:if="${#fields.hasErrors('firstName')}"
+              th:errors="*{firstName}" class="error">Fout</span>
+        </div>
+        <div>
+        <label for="lastName">Achternaam</label>
+        <input type="text" id="lastName" th:field="*{lastName}">
+        <span th:if="${#fields.hasErrors('lastName')}"
+              th:errors="*{lastName}" class="error">Fout</span>
+        </div>
+        <div>
+        <label for="image">Profielfoto</label>
+        <input type="file" id="image" name="imageFile" accept="image/*">
+        </div>
+        <button type="submit" th:text="${newFamilyMember.memberId} != null ? 'Opslaan' : 'Toevoegen'"></button>
+    </form>
 </div>
