@@ -34,6 +34,7 @@ public class ChoreManagerSecurityConfig {
                             "/chores/detail/**",
                             "/css/**",
                             "/familymembers",
+                            "/familymembers/detail/**",
                             "/images/**",
                             "/webjars/**"
                     ).permitAll()

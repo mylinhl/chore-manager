@@ -1,0 +1,28 @@
+<!-- LEFT: Card -->
+<div th:fragment="familyMemberDetail" class="mb-5 row">
+<div class="col-md-4">
+    <div class="card shadow-sm">
+
+        <img th:if="${familyMember.image != null}"
+             th:src="@{/images/{id}(id=${familyMember.image.id})}"
+             class="card-img-top w-100"
+             th:alt="${familyMember.fullName}"
+             style="height: 250px; object-fit: cover;">
+
+        <div class="card-body">
+            <h1 th:text="${familyMember.fullName}"></h1>
+        </div>
+    </div>
+</div>
+
+<!-- RIGHT: Table -->
+<div class="col-md-8">
+    <h2>Huidige taken</h2>
+    <table>
+        <tr th:each="chore : ${familyMemberChores}">
+            <td><a th:href="@{/chores/detail/{choreName}(choreName=${chore.choreName})}"
+                   th:text="${chore.choreName}"></a></td>
+        </tr>
+    </table>
+</div>
+</div>

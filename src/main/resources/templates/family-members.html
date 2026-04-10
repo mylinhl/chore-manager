@@ -19,10 +19,9 @@
                      style="height: 200px; object-fit: cover;">
 
                 <div class="card-body">
-                    <h5 class="card-title"
-                        th:text="${familymember.firstName + ' ' + familymember.lastName}">
-                        Naam
-                    </h5>
+                    <a th:href="@{familymembers/detail/{id}(id=${familymember.memberId})}">
+                        <h5 class="card-title" th:text="${familymember.fullName}"></h5>
+                    </a>
                 </div>
 
                 <div class="card-footer d-flex justify-content-between">

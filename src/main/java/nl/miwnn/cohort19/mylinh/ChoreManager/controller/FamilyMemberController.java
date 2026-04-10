@@ -1,9 +1,11 @@
 package nl.miwnn.cohort19.mylinh.ChoreManager.controller;
 
 import jakarta.validation.Valid;
+import nl.miwnn.cohort19.mylinh.ChoreManager.model.Chore;
 import nl.miwnn.cohort19.mylinh.ChoreManager.model.FamilyMember;
 import nl.miwnn.cohort19.mylinh.ChoreManager.model.Image;
 import nl.miwnn.cohort19.mylinh.ChoreManager.repository.ImageRepository;
+import nl.miwnn.cohort19.mylinh.ChoreManager.service.ChoreService;
 import nl.miwnn.cohort19.mylinh.ChoreManager.service.FamilyMemberService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * @author My Linh Lu
@@ -26,10 +29,15 @@ public class FamilyMemberController {
 
     private static final Logger log = LoggerFactory.getLogger(FamilyMemberController.class);;
     private final FamilyMemberService familyMemberService;
+    private final ChoreService choreService;
     private final ImageRepository imageRepository;
 
-    public FamilyMemberController(FamilyMemberService familyMemberService, ImageRepository imageRepository) {
+    public FamilyMemberController(
+            FamilyMemberService familyMemberService,
+            ChoreService choreService,
+            ImageRepository imageRepository) {
         this.familyMemberService = familyMemberService;
+        this.choreService = choreService;
         this.imageRepository = imageRepository;
     }
 
@@ -59,6 +67,20 @@ public class FamilyMemberController {
         log.info("Verwijderverzoek voor taak: {}", id);
         familyMemberService.deleteFamilyMemberById(id);
         return "redirect:/familymembers/all";
+    }
+
+    @GetMapping("/detail/{id}")
+    public String showFamilyMemberDetail(@PathVariable Long id, Model model){
+        Optional<FamilyMember> familyMember = familyMemberService.getFamilyMemberById(id);
+
+        if (familyMember.isEmpty()) {
+            return "redirect:/chores";
+        }
+
+        model.addAttribute("activePage", "family-members");
+        model.addAttribute("familyMember", familyMember.get());
+        model.addAttribute("familyMemberChores", choreService.getChoresByFamilyMemberId(id));
+        return "family-member-detail";
     }
 
     @PostMapping("/save")

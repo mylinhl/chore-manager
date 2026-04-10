@@ -5,7 +5,7 @@
   <title th:text="${paginaTitel}">Huishoudtaken Overzicht</title>
 </head>
 <body>
-<div class="container mt-4">
+<div class="container mt-4 mb-5">
 <nav th:replace="~{fragments/general :: navbar}"></nav>
   <h1 class="main-title" th:text="${paginaTitel}"></h1>
   <form method="get" th:action="@{/chores}">

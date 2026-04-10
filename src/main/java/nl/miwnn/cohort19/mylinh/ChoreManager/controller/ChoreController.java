@@ -143,6 +143,7 @@ public class ChoreController {
             return "redirect:/chores";
         }
 
+        model.addAttribute("activePage", "chores");
         model.addAttribute("chore", chore.get());
         return "chore-detail";
     }
