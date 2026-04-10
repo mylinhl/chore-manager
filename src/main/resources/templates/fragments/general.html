@@ -44,28 +44,28 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a th:classappend="${activePage == 'about-us'} ? 'active' : ''"
-                       class="nav-link" href="/about-us">Over Ons</a>
+                       class="nav-link" href="/about-us"><i class="bi bi-info-square-fill"></i> Over Ons</a>
                 </li>
                 <li>
                     <a href="/chores"
                        class="nav-link" th:classappend="${activePage == 'chores'} ? 'active' : ''">
-                        Huishoud Taken
+                        <i class="bi bi-list-task"></i> Huishoud Taken
                     </a>
                 </li>
                 <li>
                     <a href="/familymembers"
                        class="nav-link" th:classappend="${activePage == 'family-members'} ? 'active' : ''">
-                        Familie Leden
+                        <i class="bi bi-person-heart"></i> Familie Leden
                     </a>
                 </li>
             </ul>
             <!-- Left links -->
     </div>
-    <a sec:authorize="hasRole('ADMIN')" th:href="@{/users}">Gebruikersbeheer</a>
+    <a sec:authorize="hasRole('ADMIN')" th:href="@{/users}"><i class="bi bi-person-add"></i> Gebruikersbeheer</a>
     <form th:action="@{/logout}" method ="post" sec:authorize="isAuthenticated()" style="display: inline;">
-        <button type="submit">Uitloggen</button>
+        <button type="submit"><i class="bi bi-box-arrow-left"></i> Uitloggen</button>
     </form>
-    <a th:href="@{/login}" sec:authorize="isAnonymous()">Inloggen</a>
+    <a th:href="@{/login}" sec:authorize="isAnonymous()"><i class="bi bi-box-arrow-in-right"></i> Inloggen</a>
     </div>
 </nav>
 <!-- Footer -->
