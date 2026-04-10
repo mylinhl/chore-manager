@@ -34,6 +34,7 @@ public class FamilyMemberController {
         log.debug("Familie leden overzicht opgevraagd");
         model.addAttribute("allFamilyMembers", familyMemberRepository.findAll());
         model.addAttribute("newFamilyMember", new FamilyMember());
+        model.addAttribute("activePage", "chores");
 
         return "family-members";
     }

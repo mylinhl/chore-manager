@@ -24,6 +24,7 @@ public class IndexController {
         model.addAttribute("paginaTitel", "Huishoud Manager");
         model.addAttribute("naam", "My Linh Lu");
         model.addAttribute("datum", LocalDate.now().toString());
+        model.addAttribute("activePage", "chores");
         return "index";
     }
 }

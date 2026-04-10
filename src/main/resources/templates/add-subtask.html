@@ -1,10 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/general :: baseheader(~{:: title})}">
+  <title th:text="${paginaTitel}">Subtaak aan Huishoud Taak Toevoegen</title>
 </head>
 <body>
-$END$
+<div class="container mt-4">
+  <nav th:replace="~{fragments/general :: navbar}"></nav>
+  <form th:action="@{/subtasks/save}" th:object="${subtask}" method="post">
+    <input type="hidden" th:field="*{subtaskId}">
+    <div>
+      <label for="subtaskName">Subtaak Naam</label>
+      <input type="text" id="subtaskName" th:field="*{subtaskName}">
+      <span th:if="${#fields.hasErrors('subtaskName')}" th:errors="*{subtaskName}" class="error"></span>
+    </div>
+    <div>
+      <label for="chores">Huishoud Taak</label>
+      <select id="chores" th:field="*{chore}">
+        <option th:each="chore : ${allChores}"
+                th:value="${chore.id}"
+                th:text="${chore.choreName}">
+        </option>
+      </select>
+      <span th:if="${#fields.hasErrors('chore')}" th:errors="*{chore}" class="error"></span>
+    </div>
+    <button type="submit">Opslaan</button>
+  </form>
+  <p><a th:href="@{/subtasks}">Terug naar het overzicht</a></p>
+</div>
 </body>
+<footer th:replace="~{fragments/general :: footer}"></footer>
+<div th:replace="~{fragments/general :: scripts}"></div>
 </html>

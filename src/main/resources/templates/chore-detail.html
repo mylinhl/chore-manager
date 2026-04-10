@@ -1,30 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="/style.css">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/general :: baseheader(~{:: title})}">
   <title th:text="${paginaTitel}">Huishoud Taak Detail Pagina</title>
 </head>
 <body>
+<div class="container mt-4">
+<nav th:replace="~{fragments/general :: navbar}"></nav>
 <h1 th:text="|Details van ${chore.choreName}|"></h1>
 
   <ul>
     <li>
-      <a th:href="@{/chore/edit/{choreName}(choreName=${chore.choreName})}">Bewerk deze taak</a>
+      <a th:href="@{/chores/edit/{id}(id=${chore.id})}">Bewerk deze taak</a>
     </li>
     <li>
-      <a th:href="@{/chore/delete/{choreName}(choreName=${chore.choreName})}">Verwijder deze taak</a>
+      <a th:href="@{/chores/delete/{id}(id=${chore.id})}">Verwijder deze taak</a>
     </li>
-    <li>Voeg taak toe</li>
   </ul>
 
 <h2>Subtaken</h2>
-<table>
-  <thead>
+<table class="table table-striped table-hover">
+  <thead class="table-dark">
   <tr>
     <th>Subtaak</th>
     <th>Status</th>
-    <th></th>
+    <th>Aanpassen status</th>
   </tr>
   </thead>
   <tbody>
@@ -49,5 +49,8 @@
   </tbody>
 </table>
 <p><a th:href="@{/chores}">Terug naar het overzicht</a></p>
+</div>
 </body>
+<footer th:replace="~{fragments/general :: footer}"></footer>
+<div th:replace="~{fragments/general :: scripts}"></div>
 </html>

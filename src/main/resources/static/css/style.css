@@ -1,5 +1,5 @@
 a {
-    color: var(--bs-teal);
+    color: #dc74aa;
     text-decoration: none;
 }
 
@@ -9,7 +9,18 @@ a:hover {
 
 button {
     border: 1px teal;
-    background-color: teal;
+    background-color: #ffb0d9;
+}
+
+.table-striped {
+    --bs-table-striped-bg: #FCEAEA;   /* soft pink */
+    --bs-table-striped-color: #5a3a3a;
+    --bs-table-hover-bg: #FADADA;   /* slightly darker pink */
+}
+
+.table-striped thead th {
+    background-color: #7e154b;
+    color: #fff;
 }
 
 .error {
@@ -20,6 +31,10 @@ button {
 
 .active {
     font-weight: bold;
+}
+
+.custom-navbar {
+    background-color: #ffb0d9;
 }
 
 .footer {

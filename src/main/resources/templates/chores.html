@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title th:text="${paginaTitel}">Huishoudtaken Overzicht</title>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/general :: baseheader(~{:: title})}">
+  <title th:text="${paginaTitel}">Huishoudtaken Overzicht</title>
 </head>
 <body>
+<div class="container mt-4">
+<nav th:replace="~{fragments/general :: navbar}"></nav>
   <h1 th:text="${paginaTitel}"></h1>
   <form method="get" action="/chores">
     <input type="text" name="query"
@@ -16,19 +18,22 @@
        class="alert alert-success">
     <span th:text="${successMessage}">Opgeslagen!</span>
   </div>
-  <table>
-    <thead>
+  <table class="table table-striped table-hover">
+    <thead class="table-dark">
     <tr>
       <th>Huishoud Taak</th>
       <th>Frequentie per week</th>
       <th>Locatie</th>
       <th>Verantwoordelijke</th>
+      <th>Bewerken</th>
+      <th>Verwijderen</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="chore : ${chores}">
       <td>
-        <a th:href="@{/detail/{id}(id=${chore.id})}" th:text="${chore.choreName}">Huishoud Taak Naam</a>
+        <a th:href="@{chores/detail/{choreName}(choreName=${chore.choreName})}"
+           th:text="${chore.choreName}">Huishoud Taak Naam</a>
       </td>
       <td th:text="${chore.choreFrequency}">Frequentie per week</td>
       <td th:text="${chore.location}">Locatie</td>
@@ -39,14 +44,25 @@
         </span>
       </td>
       <td>
-        <a th:href="@{/chores/edit/{id}(id=${chore.id})}">Bewerken</a>
+        <a th:href="@{/chores/edit/{id}(id=${chore.id})}"><i class="bi bi-pencil-square"></i></a>
       </td>
       <td>
-        <a th:href="@{/chores/delete/{id}(id=${chore.getId()})}">Verwijderen</a>
+        <a th:href="@{/chores/delete/{id}(id=${chore.id})}"><i class="bi bi-trash"></i></a>
       </td>
+    </tr>
+    <tr>
+      <td>TOEVOEGEN HUISHOUD TAAK</td>
+      <td>TOEVOEGEN FREQUENTIE</td>
+      <td>TOEVOEGEN LOCATIE</td>
+      <td>TOEVOEGEN VERANTWOORDELIJKE</td>
+      <td>OPSLAAN KNOP</td>
     </tr>
     </tbody>
   </table>
   <p><a th:href="@{/chores/add}">Nieuwe taak toevoegen</a></p>
+</div>
 </body>
+
+<footer th:replace="~{fragments/general :: footer}"></footer>
+<div th:replace="~{fragments/general :: scripts}"></div>
 </html>

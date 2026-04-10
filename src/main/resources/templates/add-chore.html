@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="/style.css">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/general :: baseheader(~{:: title})}">
     <title th:text="${paginaTitel}">Huishoud Taak Toevoegen</title>
 </head>
 <body>
+<div class="container mt-4">
+<nav th:replace="~{fragments/general :: navbar}"></nav>
     <form th:action="@{/chores/save}" th:object="${chore}" method="post">
         <input type="hidden" th:field="*{id}">
         <div>
@@ -24,16 +25,20 @@
             <span th:if="${#fields.hasErrors('location')}" th:errors="*{location}" class="error"></span>
         </div>
         <div>
-            <label for="responsibility">Verantwoordelijke</label>
-            <select id="responsibility" th:field="*{responsibility}" multiple>
+            <label for="familymembers">Verantwoordelijke</label>
+            <select id="familymembers" th:field="*{familymembers}" multiple>
                 <option th:each="familymember : ${allFamilyMembers}"
-                        th:value="${familymember.fullName}"
+                        th:value="${familymember.memberId}"
                         th:text="${familymember.fullName}">
                 </option>
             </select>
+            <span th:if="${#fields.hasErrors('familymembers')}" th:errors="*{familymembers}" class="error"></span>
         </div>
         <button type="submit">Opslaan</button>
     </form>
     <p><a th:href="@{/chores}">Terug naar het overzicht</a></p>
+</div>
 </body>
+<footer th:replace="~{fragments/general :: footer}"></footer>
+<div th:replace="~{fragments/general :: scripts}"></div>
 </html>

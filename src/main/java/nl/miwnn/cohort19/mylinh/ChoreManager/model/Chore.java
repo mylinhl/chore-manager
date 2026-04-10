@@ -18,6 +18,7 @@ public class Chore {
 
     @NotBlank(message = "Naam voor huishoud taak mag niet leeg zijn.")
     @Size(max = 100, message = "Naam voor huishoud taak mag maximaal 100 tekens bevatten")
+    @Column(unique = true)
     private String choreName;
 
     @NotNull(message = "Frequentie per week is verplicht")
@@ -27,9 +28,6 @@ public class Chore {
 
     @NotBlank(message = "Locatie mag niet leeg zijn")
     private String location;
-
-    @NotBlank(message = "Verantwoordelijke mag niet leeg zijn")
-    private String responsibility;
 
     @OneToMany(mappedBy = "chore", cascade = CascadeType.ALL)
     private List<SubTask> subtasks = new ArrayList<>();
@@ -42,11 +40,10 @@ public class Chore {
     )
     private List<FamilyMember> familymembers = new ArrayList<>();
 
-    public Chore(String choreName, int choreFrequency, String location, String responsibility) {
+    public Chore(String choreName, int choreFrequency, String location) {
         this.choreName = choreName;
         this.choreFrequency = choreFrequency;
         this.location = location;
-        this.responsibility = responsibility;
     }
 
     public Chore() {}
@@ -85,14 +82,6 @@ public class Chore {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public String getResponsibility() {
-        return responsibility;
-    }
-
-    public void setResponsibility(String responsibility) {
-        this.responsibility = responsibility;
     }
 
     public List<FamilyMember> getFamilymembers() {

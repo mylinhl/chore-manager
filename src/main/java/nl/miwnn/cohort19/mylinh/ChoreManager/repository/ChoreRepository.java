@@ -12,5 +12,5 @@ import java.util.Optional;
 public interface ChoreRepository extends JpaRepository<Chore, Long> {
     Optional<Chore> findByChoreName(String choreName);
 
-    List<Chore> findChoresByTitleContainingIgnoreCase(String choreName);
+    List<Chore> findChoresByChoreNameContainingIgnoreCase(String choreName);
 }
